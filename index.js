@@ -193,95 +193,6 @@ client.on("messageCreate", (message) => {
 
     return message.reply(`✅ Админ өөртөө ${amount} токен авлаа! 🎉 Одоо үлдэгдэл: ${users[adminId].tokens}`);
   }
-  // 🪙 Admin Remove Tokens
-if (message.content.startsWith("dremovetoken")) {
-  const parts = message.content.split(" ");
-  const mention = message.mentions.users.first();
-  const amount = parseInt(parts[2]);
-
-  const adminId = "1154690693202194492"; // Чиний ID
-
-  if (message.author.id !== adminId) {
-    return message.reply("❌ Энэ команд зөвхөн админд зориулагдсан!");
-  }
-
-  if (!mention) return message.reply("❌ Хэнд хасахаа @user гэж зааж өг!");
-  if (isNaN(amount)) return message.reply("❌ Токены тоо буруу байна!");
-
-  const targetId = mention.id;
-
-  if (!users[targetId]) {
-    return message.reply("❌ Энэ хэрэглэгчийн өгөгдөл байхгүй байна!");
-  }
-
-  users[targetId].tokens = Math.max(0, users[targetId].tokens - amount);
-  saveUsers();
-
-  return message.reply(`✅ ${mention.username}-ийн токеноос ${amount} хаслаа! 🎉 Одоо үлдэгдэл: ${users[targetId].tokens}`);
-}
-
-// 📦 Admin Remove Inventory Item
-if (message.content.startsWith("dremoveitem")) {
-  const parts = message.content.split(" ");
-  const mention = message.mentions.users.first();
-  const itemName = parts.slice(2).join(" ");
-
-  const adminId = "1154690693202194492"; // Чиний ID
-
-  if (message.author.id !== adminId) {
-    return message.reply("❌ Энэ команд зөвхөн админд зориулагдсан!");
-  }
-
-  if (!mention) return message.reply("❌ @user гэж зааж өг!");
-  if (!itemName) return message.reply("❌ Item нэрээ бич!");
-
-  const targetId = mention.id;
-
-  if (!users[targetId]) {
-    return message.reply("❌ Энэ хэрэглэгчийн өгөгдөл байхгүй байна!");
-  }
-
-  const index = users[targetId].inventory.indexOf(itemName);
-  if (index === -1) {
-    return message.reply(`❌ ${mention.username}-ийн inventory дотор ${itemName} байхгүй байна!`);
-  }
-
-  users[targetId].inventory.splice(index, 1);
-  saveUsers();
-
-  return message.reply(`✅ ${mention.username}-ийн inventory‑оос ${itemName} хаслаа!`);
-}
-  // 📦 Admin Remove Inventory Item
-if (message.content.startsWith("dremoveitem")) {
-  const parts = message.content.split(" ");
-  const mention = message.mentions.users.first();
-  const itemName = parts.slice(2).join(" ");
-
-  const adminId = "1303003697508253738"; // Чиний ID
-
-  if (message.author.id !== adminId) {
-    return message.reply("❌ Энэ команд зөвхөн админд зориулагдсан!");
-  }
-
-  if (!mention) return message.reply("❌ @user гэж зааж өг!");
-  if (!itemName) return message.reply("❌ Item нэрээ бич!");
-
-  const targetId = mention.id;
-
-  if (!users[targetId]) {
-    return message.reply("❌ Энэ хэрэглэгчийн өгөгдөл байхгүй байна!");
-  }
-
-  const index = users[targetId].inventory.indexOf(itemName);
-  if (index === -1) {
-    return message.reply(`❌ ${mention.username}-ийн inventory дотор ${itemName} байхгүй байна!`);
-  }
-
-  users[targetId].inventory.splice(index, 1);
-  saveUsers();
-
-  return message.reply(`✅ ${mention.username}-ийн inventory‑оос ${itemName} хаслаа!`);
-}
 
   // 🆘 Help
   if (message.content === "dhelp") {
@@ -292,6 +203,7 @@ if (message.content.startsWith("dremoveitem")) {
     text += "• dinv - Show your inventory\n";
     text += "• dleaderboard - Show top players\n";
     text += "• dgive @user <amount> - Give tokens to a user\n";
+    text += "• dadmin <amount> - Admin add tokens\n";
     text += "• dhelp - Show this help menu\n";
 
     return message.reply(text);
@@ -301,7 +213,7 @@ if (message.content.startsWith("dremoveitem")) {
 });
 
 // ⚡ Ready
-client.once("ready", () => {
+client.once("clientReady", () => {
   console.log(`Logged in as ${client.user.tag}`);
 });
 
